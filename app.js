@@ -14,6 +14,8 @@ app.use(bodyParser.json()) //Para devolver un objeto en json
 //IMPORTAR RUTAS
 var appRoutes = require('./routes/app');
 var usuarioRoutes = require('./routes/usuario');
+var hospitalRoutes = require('./routes/hospital');
+var medicoRoutes = require('./routes/medico');
 var loginRoutes = require('./routes/login');
 
 //Conexión a la BD
@@ -25,6 +27,8 @@ mongoose.connection.openUri('mongodb://localhost:27017/hospitalDB', (err, res)=>
 
 //RUTAS
 app.use('/usuario', usuarioRoutes);
+app.use('/hospital', hospitalRoutes);
+app.use('/medico', medicoRoutes);
 app.use('/login', loginRoutes);
 app.use('/', appRoutes);
 

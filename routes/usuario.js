@@ -132,6 +132,7 @@ app.put('/:id',mdAutenticacion.verificaToken, (req, res)=>{
 //============================
 app.delete('/:id', mdAutenticacion.verificaToken, (req, res)=>{
 	var id = req.params.id;
+	
 	Usuario.findByIdAndRemove(id, (err, usuarioBorrado)=>{
 		if(err){
 			return res.status(500).json({
