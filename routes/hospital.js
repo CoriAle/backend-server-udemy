@@ -10,9 +10,14 @@ var mdAutenticacion = require('../middlewares/autenticacion');
  *===================================================*/
 
 app.get('/', (req, res)=>{
+	var desde = req.query.desde || 0;
+	desde = Number(desde);
 
-	Hospital.find({}).
-	exec((err, hospitales)=>{
+	Hospital.find({})
+	.skip(desde) //Comenzar desde
+	.limit(5)
+	.populate('usuario', 'nombre email') //Buscar datos de otra colección
+	.exec((err, hospitales)=>{
 		if(err){
 			return res.status(500).json({
 				ok: false,
@@ -21,10 +26,14 @@ app.get('/', (req, res)=>{
 			});
 		}//End if
 
-		return res.status(200).json({
-			ok: true,
-			hospitales: hospitales
+		Hospital.count({}, (err, conteo)=>{
+			return res.status(200).json({
+				ok: true,
+				hospitales: hospitales,
+				total: conteo
+			});
 		});
+		
 	});
 });
 
@@ -79,6 +88,7 @@ app.post('/', mdAutenticacion.verificaToken, (req,  res)=>{
  		}//end if
  		//Actualizar el hospital
  		hospital.nombre = body.nombre;
+ 		hospital.usuario = req.usuario._id;
  		hospital.save((err, hospital)=>{
  			if(err){
 	 			return res.status(500).json({
